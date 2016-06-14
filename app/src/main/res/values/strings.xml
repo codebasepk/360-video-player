@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Career EDGE VR</string>
+    <string name="action_settings">setting</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+</resources>
