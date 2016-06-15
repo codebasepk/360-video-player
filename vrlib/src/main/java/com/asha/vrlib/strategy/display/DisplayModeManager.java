@@ -2,6 +2,7 @@ package com.asha.vrlib.strategy.display;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import com.asha.vrlib.MDVRLibrary;
 import com.asha.vrlib.strategy.ModeManager;
@@ -25,6 +26,7 @@ public class DisplayModeManager extends ModeManager<AbsDisplayStrategy> implemen
         int nextMode = getMode() == MDVRLibrary.DISPLAY_MODE_NORMAL ?
                 MDVRLibrary.DISPLAY_MODE_GLASS
                 : MDVRLibrary.DISPLAY_MODE_NORMAL;
+        Log.i("TAG", "Mode "+ nextMode);
         switchMode(activity,nextMode);
     }
 
