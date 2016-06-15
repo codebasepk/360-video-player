@@ -27,7 +27,7 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
         mMediaPlayerWrapper.setPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
-                cancelBusy();
+//                cancelBusy();
             }
         });
 
@@ -61,7 +61,8 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
                 .gesture(new MDVRLibrary.IGestureListener() {
                     @Override
                     public void onClick(MotionEvent e) {
-                        Toast.makeText(VideoPlayerActivity.this, "onClick!", Toast.LENGTH_SHORT).show();
+                        MD360PlayerActivity.getInstance().toggleButtons();
+//                        Toast.makeText(VideoPlayerActivity.this, "onClick!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build(R.id.surface_view1,R.id.surface_view2);

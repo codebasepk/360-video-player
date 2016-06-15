@@ -1,35 +1,49 @@
 package com.byteshaft.a360player.player;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.asha.vrlib.MDVRLibrary;
 import com.byteshaft.a360player.R;
 
 /**
  * using MD360Renderer
- *
+ * <p/>
  * Created by hzqiujiadi on 16/1/22.
  * hzqiujiadi ashqalcn@gmail.com
  */
-public abstract class MD360PlayerActivity extends Activity {
+public abstract class MD360PlayerActivity extends Activity implements View.OnClickListener {
 
-    public static void startVideo(Context context, Uri uri){
+    private ImageButton imageButton;
+    private FrameLayout frameLayout;
+    private static MD360PlayerActivity sInstance;
+
+
+    public static MD360PlayerActivity getInstance() {
+        return sInstance;
+    }
+
+    public static void startVideo(Context context, Uri uri) {
         start(context, uri, VideoPlayerActivity.class);
     }
 
 
-    private static void start(Context context, Uri uri, Class<? extends Activity> clz){
-        Intent i = new Intent(context,clz);
+    private static void start(Context context, Uri uri, Class<? extends Activity> clz) {
+        Intent i = new Intent(context, clz);
         i.setData(uri);
         context.startActivity(i);
     }
@@ -54,18 +68,19 @@ public abstract class MD360PlayerActivity extends Activity {
         mVRLibrary = createVRLibrary();
 
         // interactive mode switcher
-        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
-        interactiveModeSwitcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mVRLibrary.switchInteractiveMode(MD360PlayerActivity.this);
-                updateInteractiveModeText(interactiveModeSwitcher);
-            }
-        });
-        updateInteractiveModeText(interactiveModeSwitcher);
+//        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
+//        interactiveModeSwitcher.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mVRLibrary.switchInteractiveMode(MD360PlayerActivity.this);
+//                updateInteractiveModeText(interactiveModeSwitcher);
+//            }
+//        });
+//        updateInteractiveModeText(interactiveModeSwitcher);
 
         // display mode switcher
-        final Button displayModeSwitcher = (Button) findViewById(R.id.button_display_mode_switcher);
+        sInstance = this;
+        final ImageButton displayModeSwitcher = (ImageButton) findViewById(R.id.button_display_mode_switcher);
         displayModeSwitcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,11 +95,26 @@ public abstract class MD360PlayerActivity extends Activity {
             public void onClick(View v) {
                 mVRLibrary.resetPinch();
                 // reset touch
-                if (mVRLibrary.getInteractiveMode() == MDVRLibrary.INTERACTIVE_MODE_TOUCH){
+                if (mVRLibrary.getInteractiveMode() == MDVRLibrary.INTERACTIVE_MODE_TOUCH) {
                     mVRLibrary.resetTouch();
                 }
             }
         });
+
+        imageButton = (ImageButton) findViewById(R.id.play_pause);
+        imageButton.setOnClickListener(this);
+//        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+//        linearLayout.setVisibility(View.VISIBLE);
+        frameLayout.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                linearLayout.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.GONE);
+            }
+        }, 2000);
 
     }
 
@@ -93,22 +123,24 @@ public abstract class MD360PlayerActivity extends Activity {
         return mVRLibrary.handleTouchEvent(event) || super.onTouchEvent(event);
     }
 
-    private void updateDisplayModeText(Button button) {
+    private void updateDisplayModeText(ImageButton button) {
         String text = null;
-        switch (mVRLibrary.getDisplayMode()){
+        switch (mVRLibrary.getDisplayMode()) {
             case MDVRLibrary.DISPLAY_MODE_NORMAL:
+                button.setImageResource(R.drawable.vr);
                 text = "NORMAL";
                 break;
             case MDVRLibrary.DISPLAY_MODE_GLASS:
+                button.setImageResource(R.drawable.landscape);
                 text = "GLASS";
                 break;
         }
-        if (!TextUtils.isEmpty(text)) button.setText(text);
+//        if (!TextUtils.isEmpty(text)) button.setText(text);
     }
 
-    private void updateInteractiveModeText(Button button){
+    private void updateInteractiveModeText(Button button) {
         String text = null;
-        switch (mVRLibrary.getInteractiveMode()){
+        switch (mVRLibrary.getInteractiveMode()) {
             case MDVRLibrary.INTERACTIVE_MODE_MOTION:
                 text = "MOTION";
                 break;
@@ -141,13 +173,64 @@ public abstract class MD360PlayerActivity extends Activity {
 
     protected Uri getUri() {
         Intent i = getIntent();
-        if (i == null || i.getData() == null){
+        if (i == null || i.getData() == null) {
             return null;
         }
         return i.getData();
     }
 
-    public void cancelBusy(){
-        findViewById(R.id.progress).setVisibility(View.GONE);
+    public void toggleButtons() {
+        if (frameLayout.getVisibility() == View.VISIBLE) {
+//            linearLayout.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
+        } else {
+//            linearLayout.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.VISIBLE);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    linearLayout.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.GONE);
+                }
+            }, 2000);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitDialog();
+    }
+
+    private void exitDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+        alertDialog.setTitle("Exit");
+        alertDialog.setMessage("Do you really want to exit");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        finish();
+                    }
+                });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.play_pause:
+
+
+                break;
+        }
     }
 }

@@ -21,42 +21,62 @@
           android:layout_height="match_parent" />
    </LinearLayout>
 
-   <LinearLayout
+   <!--<LinearLayout-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:orientation="horizontal"-->
+       <!--android:id="@+id/linear_layout"-->
+       <!--android:visibility="gone"-->
+       <!--android:layout_margin="5dp">-->
+      <!--&lt;!&ndash;<Button&ndash;&gt;-->
+          <!--&lt;!&ndash;android:padding="5dp"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:id="@+id/button_interactive_mode_switcher"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:background="@drawable/selector_button"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:textColor="#FFFFFF"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:layout_height="match_parent" />&ndash;&gt;-->
+     <!---->
+   <!--</LinearLayout>-->
+
+   <FrameLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:layout_margin="10dp">
-      <Button
+       android:id="@+id/frame_layout"
+       android:visibility="visible"
+       android:background="@drawable/selector_button"
+       android:clickable="false"
+       android:layout_alignParentBottom="true">
+
+      <ImageButton
           android:padding="5dp"
-          android:id="@+id/button_interactive_mode_switcher"
-          android:background="@drawable/selector_button"
-          android:textColor="#FFFFFF"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent" />
-      <Button
-          android:padding="5dp"
-          android:layout_marginLeft="10dp"
+          android:layout_gravity="start"
+          android:src="@drawable/vr"
           android:id="@+id/button_display_mode_switcher"
           android:background="@drawable/selector_button"
           android:textColor="#FFFFFF"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent" />
+          android:layout_height="wrap_content" />
 
-      <Button
-          android:text="RESET"
+      <ImageButton
           android:padding="5dp"
-          android:layout_marginLeft="10dp"
+          android:layout_gravity="end|center"
           android:id="@+id/button_reset"
+          android:src="@drawable/zoom_reset"
           android:background="@drawable/selector_button"
           android:textColor="#FFFFFF"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent" />
-   </LinearLayout>
+          android:layout_height="wrap_content" />
 
-   <ProgressBar
-       android:layout_centerInParent="true"
-       android:id="@+id/progress"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" />
+
+      <ImageButton
+          android:id="@+id/play_pause"
+          android:layout_gravity="center"
+          android:padding="5dp"
+          android:clickable="true"
+          android:src="@android:drawable/ic_media_play"
+          android:background="@drawable/selector_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+   </FrameLayout>
 
 </RelativeLayout>

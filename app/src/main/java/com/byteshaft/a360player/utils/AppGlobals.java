@@ -9,6 +9,7 @@ public class AppGlobals extends Application {
     private static Context sContext;
     public static final String INTERVIEW_PREP =
             "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/vrtest.mp4";
+    public static boolean sVideoPaused = false;
 
 
     @Override

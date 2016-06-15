@@ -1,18 +1,22 @@
 package com.byteshaft.a360player.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.byteshaft.a360player.R;
+import com.byteshaft.a360player.player.MD360PlayerActivity;
 import com.byteshaft.a360player.utils.AppGlobals;
 import com.byteshaft.a360player.utils.Helpers;
 
@@ -56,7 +60,12 @@ public class VideosFragment extends Fragment {
                         .getApplicationContext(), new OnItemClickListener() {
             @Override
             public void onItem(Integer item) {
-//
+                String url = singleItemData.get(item)[3];
+                if (!TextUtils.isEmpty(url)){
+                    MD360PlayerActivity.startVideo(getActivity(), Uri.parse(url));
+                } else {
+                    Toast.makeText(getActivity(), "empty url!", Toast.LENGTH_SHORT).show();
+                }
             }
         }));
     }
@@ -72,10 +81,10 @@ public class VideosFragment extends Fragment {
         public CardsAdapter(ArrayList<Integer> videoIds, HashMap<Integer, String[]> videoData,
                             Context context,
                             OnItemClickListener listener) {
-            mListener = listener;
+            this.mListener = listener;
             this.videoIds = videoIds;
             this.videoData = videoData;
-            mGestureDetector = new GestureDetector(context,
+            this.mGestureDetector = new GestureDetector(context,
                     new GestureDetector.SimpleOnGestureListener() {
                         @Override
                         public boolean onSingleTapUp(MotionEvent e) {
