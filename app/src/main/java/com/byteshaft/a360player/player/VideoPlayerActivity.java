@@ -11,11 +11,6 @@ import com.byteshaft.a360player.R;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-
-/**
- * Created by hzqiujiadi on 16/4/5.
- * hzqiujiadi ashqalcn@gmail.com
- */
 public class VideoPlayerActivity extends MD360PlayerActivity {
 
     private MediaPlayerWrapper mMediaPlayerWrapper = new MediaPlayerWrapper();
@@ -27,7 +22,7 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
         mMediaPlayerWrapper.setPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
-//                cancelBusy();
+                cancelBusy();
             }
         });
 

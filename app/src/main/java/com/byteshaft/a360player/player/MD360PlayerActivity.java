@@ -26,6 +26,7 @@ import com.byteshaft.a360player.R;
  * Created by hzqiujiadi on 16/1/22.
  * hzqiujiadi ashqalcn@gmail.com
  */
+
 public abstract class MD360PlayerActivity extends Activity implements View.OnClickListener {
 
     private ImageButton imageButton;
@@ -118,6 +119,10 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
 
     }
 
+    public void cancelBusy() {
+        findViewById(R.id.progress).setVisibility(View.GONE);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mVRLibrary.handleTouchEvent(event) || super.onTouchEvent(event);
@@ -203,7 +208,7 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
     }
 
     private void exitDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Exit");
         alertDialog.setMessage("Do you really want to exit");
         alertDialog.setCancelable(false);
