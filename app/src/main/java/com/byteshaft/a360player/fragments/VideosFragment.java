@@ -1,6 +1,7 @@
 package com.byteshaft.a360player.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +48,7 @@ public class VideosFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         idsList.add(0);
         singleItemData.put(0, new String[] {"Interview Prep", "5:52",String.valueOf(
-                Helpers.isUserLoggedIn("Interview Prep")) , AppGlobals.INTERVIEW_PREP});
+                Helpers.isUserLoggedIn("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
         return mBaseView;
     }
 
@@ -61,6 +63,8 @@ public class VideosFragment extends Fragment {
             @Override
             public void onItem(Integer item) {
                 String url = singleItemData.get(item)[3];
+                int value = Helpers.isUserLoggedIn(singleItemData.get(item)[0]);
+                Helpers.videoPlayer(singleItemData.get(item)[0], (value+1));
                 if (!TextUtils.isEmpty(url)){
                     MD360PlayerActivity.startVideo(getActivity(), Uri.parse(url));
                 } else {
@@ -113,6 +117,16 @@ public class VideosFragment extends Fragment {
             mViewHolder.videoTitle.setText(videoData.get(videoIds.get(position))[0]);
             mViewHolder.videoTime.setText(videoData.get(videoIds.get(position))[1]);
             mViewHolder.watchTime.setText(videoData.get(videoIds.get(position))[2]);
+            String drawableName = videoData.get(videoIds.get(position))[4];
+            if (!drawableName.trim().isEmpty()) {
+                int resId = getResources().getIdentifier(drawableName, "drawable",
+                        getActivity().getPackageName());
+                if (resId != 0) {
+                    Drawable d = getActivity().getResources().getDrawable(resId);
+                    mViewHolder.imageView.setImageDrawable(d);
+                }
+            }
+
         }
 
         @Override
@@ -148,6 +162,7 @@ public class VideosFragment extends Fragment {
         public TextView videoTitle;
         public TextView watchTime;
         public TextView videoTime;
+        public ImageView imageView;
 
         public CustomView(View itemView) {
             super(itemView);
@@ -155,6 +170,7 @@ public class VideosFragment extends Fragment {
             videoTitle = (TextView) itemView.findViewById(R.id.video_title);
             watchTime = (TextView) itemView.findViewById(R.id.watch_time);
             videoTime = (TextView) itemView.findViewById(R.id.video_time);
+            imageView = (ImageView) itemView.findViewById(R.id.bitmap);
         }
     }
 
