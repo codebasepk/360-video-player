@@ -1,13 +1,14 @@
 package com.byteshaft.a360player.player;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.asha.vrlib.MDVRLibrary;
 import com.byteshaft.a360player.R;
@@ -27,11 +29,12 @@ import com.byteshaft.a360player.R;
  * hzqiujiadi ashqalcn@gmail.com
  */
 
-public abstract class MD360PlayerActivity extends Activity implements View.OnClickListener {
+public abstract class MD360PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageButton imageButton;
     private FrameLayout frameLayout;
     private static MD360PlayerActivity sInstance;
+    private ImageView glassView;
 
 
     public static MD360PlayerActivity getInstance() {
@@ -67,6 +70,7 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
 
         // init VR Library
         mVRLibrary = createVRLibrary();
+        glassView = (ImageView) findViewById(R.id.glass_view);
 
         // interactive mode switcher
 //        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
@@ -117,6 +121,7 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
             }
         }, 2000);
 
+
     }
 
     public void cancelBusy() {
@@ -133,10 +138,12 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
         switch (mVRLibrary.getDisplayMode()) {
             case MDVRLibrary.DISPLAY_MODE_NORMAL:
                 button.setImageResource(R.drawable.vr);
+                glassView.setVisibility(View.GONE);
                 text = "NORMAL";
                 break;
             case MDVRLibrary.DISPLAY_MODE_GLASS:
                 button.setImageResource(R.drawable.landscape);
+                glassView.setVisibility(View.VISIBLE);
                 text = "GLASS";
                 break;
         }
@@ -233,7 +240,6 @@ public abstract class MD360PlayerActivity extends Activity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.play_pause:
-
 
                 break;
         }

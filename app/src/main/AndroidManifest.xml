@@ -21,7 +21,7 @@
 
         <activity android:label="MDMultiDemoActivity" android:name=".player.VideoPlayerActivity"
             android:configChanges="screenSize|orientation" android:screenOrientation="landscape"
-            android:process=":vrPlayer"/>
+            android:process=":vrPlayer" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
