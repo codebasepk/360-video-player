@@ -116,7 +116,7 @@ public class VideosFragment extends Fragment {
             mViewHolder.hiddenId.setText(String.valueOf(videoIds.get(position)));
             mViewHolder.videoTitle.setText(videoData.get(videoIds.get(position))[0]);
             mViewHolder.videoTime.setText(videoData.get(videoIds.get(position))[1]);
-            mViewHolder.watchTime.setText(videoData.get(videoIds.get(position))[2]);
+            mViewHolder.watchTime.setText("Views " +videoData.get(videoIds.get(position))[2]);
             String drawableName = videoData.get(videoIds.get(position))[4];
             if (!drawableName.trim().isEmpty()) {
                 int resId = getResources().getIdentifier(drawableName, "drawable",

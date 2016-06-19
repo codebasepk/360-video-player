@@ -1,13 +1,16 @@
 package com.byteshaft.a360player.player;
 
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.View;
 import android.widget.Toast;
 
 import com.asha.vrlib.MDVRLibrary;
 import com.byteshaft.a360player.R;
+import com.byteshaft.a360player.utils.AppGlobals;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -31,12 +34,27 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
             mMediaPlayerWrapper.openRemoteFile(uri.toString());
             mMediaPlayerWrapper.prepare();
         }
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (AppGlobals.sVideoPaused) {
+                    AppGlobals.sPausedByHand = false;
+                    mMediaPlayerWrapper.onResume();
+                    imageButton.setImageResource(android.R.drawable.ic_media_pause);
+                } else {
+                    AppGlobals.sPausedByHand = true;
+                    mMediaPlayerWrapper.onPause();
+                    imageButton.setImageResource(android.R.drawable.ic_media_play);
+                }
+            }
+        });
     }
 
     @Override
     protected MDVRLibrary createVRLibrary() {
         return MDVRLibrary.with(this)
                 .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
+                .motionDelay(SensorManager.SENSOR_DELAY_GAME)
                 .interactiveMode(MDVRLibrary.INTERACTIVE_MODE_MOTION)
                 .video(new MDVRLibrary.IOnSurfaceReadyCallback() {
                     @Override

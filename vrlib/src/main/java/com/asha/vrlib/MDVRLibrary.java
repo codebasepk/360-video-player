@@ -168,7 +168,7 @@ public class MDVRLibrary {
         mTouchHelper.reset();
     }
 
-    public void onResume(Context context){
+    public void onResume(Context context) {
         mInteractiveModeManager.onResume(context);
 
         for (GLSurfaceView glSurfaceView:mGLSurfaceViewList){

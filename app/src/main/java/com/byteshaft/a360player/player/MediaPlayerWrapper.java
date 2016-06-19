@@ -2,6 +2,9 @@ package com.byteshaft.a360player.player;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
+
+import com.byteshaft.a360player.utils.AppGlobals;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,15 +24,28 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     private static final int STATUS_PAUSED = 4;
     private static final int STATUS_STOPPED = 5;
     private int mStatus = STATUS_IDLE;
+    private int mBufferPercentage = 0;
 
     public void init(){
         mStatus = STATUS_IDLE;
         mPlayer = new IjkMediaPlayer();
         mPlayer.setOnPreparedListener(this);
+        mPlayer.setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(IMediaPlayer mp, int percent) {
+                Log.i("TAG", "" + percent);
+                if (percent > mBufferPercentage) {
+                    mBufferPercentage = percent;
+                    MD360PlayerActivity.sBufferUpdate.setText(mBufferPercentage + "%");
+                }
+            }
+        });
         mPlayer.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-                return false;
+                Log.i("IMediaPlayer", "" + what);
+                Log.i("IMediaPlayer","" + extra);
+                return true;
             }
         });
 
@@ -132,10 +148,12 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
 
     public void onPause() {
         pause();
+        AppGlobals.sVideoPaused = true;
     }
 
     public void onResume() {
         start();
+        AppGlobals.sVideoPaused = false;
     }
 
     public void onDestroy() {
