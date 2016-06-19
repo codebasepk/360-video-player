@@ -18,9 +18,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.asha.vrlib.MDVRLibrary;
 import com.byteshaft.a360player.R;
+import com.byteshaft.a360player.utils.AppGlobals;
 
 /**
  * using MD360Renderer
@@ -29,12 +31,13 @@ import com.byteshaft.a360player.R;
  * hzqiujiadi ashqalcn@gmail.com
  */
 
-public abstract class MD360PlayerActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class MD360PlayerActivity extends AppCompatActivity {
 
-    private ImageButton imageButton;
+    public ImageButton imageButton;
     private FrameLayout frameLayout;
     private static MD360PlayerActivity sInstance;
     private ImageView glassView;
+    public static TextView sBufferUpdate;
 
 
     public static MD360PlayerActivity getInstance() {
@@ -71,6 +74,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity implements V
         // init VR Library
         mVRLibrary = createVRLibrary();
         glassView = (ImageView) findViewById(R.id.glass_view);
+        sBufferUpdate = (TextView) findViewById(R.id.buffer_percentage);
 
         // interactive mode switcher
 //        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
@@ -107,7 +111,6 @@ public abstract class MD360PlayerActivity extends AppCompatActivity implements V
         });
 
         imageButton = (ImageButton) findViewById(R.id.play_pause);
-        imageButton.setOnClickListener(this);
 //        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
 //        linearLayout.setVisibility(View.VISIBLE);
@@ -168,7 +171,9 @@ public abstract class MD360PlayerActivity extends AppCompatActivity implements V
     @Override
     protected void onResume() {
         super.onResume();
-        mVRLibrary.onResume(this);
+        if (!AppGlobals.sPausedByHand) {
+            mVRLibrary.onResume(this);
+        }
     }
 
     @Override
@@ -193,16 +198,13 @@ public abstract class MD360PlayerActivity extends AppCompatActivity implements V
 
     public void toggleButtons() {
         if (frameLayout.getVisibility() == View.VISIBLE) {
-//            linearLayout.setVisibility(View.GONE);
             frameLayout.setVisibility(View.GONE);
         } else {
-//            linearLayout.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.VISIBLE);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    linearLayout.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.GONE);
                 }
             }, 2000);
@@ -234,14 +236,5 @@ public abstract class MD360PlayerActivity extends AppCompatActivity implements V
             }
         });
         alertDialog.show();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.play_pause:
-
-                break;
-        }
     }
 }

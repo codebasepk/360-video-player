@@ -10,6 +10,7 @@ public class AppGlobals extends Application {
     public static final String INTERVIEW_PREP =
             "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/vrtest.mp4";
     public static boolean sVideoPaused = false;
+    public static boolean sPausedByHand = false;
 
 
     @Override
