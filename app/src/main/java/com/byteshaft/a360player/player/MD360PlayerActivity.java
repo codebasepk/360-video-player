@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.asha.vrlib.MDVRLibrary;
@@ -38,6 +39,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
     private static MD360PlayerActivity sInstance;
     private ImageView glassView;
     public static TextView sBufferUpdate;
+    public static ProgressBar sProgressBar;
 
 
     public static MD360PlayerActivity getInstance() {
@@ -75,6 +77,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         mVRLibrary = createVRLibrary();
         glassView = (ImageView) findViewById(R.id.glass_view);
         sBufferUpdate = (TextView) findViewById(R.id.buffer_percentage);
+        sProgressBar = (ProgressBar) findViewById(R.id.progress);
 
         // interactive mode switcher
 //        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
@@ -123,8 +126,6 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
                 frameLayout.setVisibility(View.GONE);
             }
         }, 2000);
-
-
     }
 
     public void cancelBusy() {
@@ -194,6 +195,14 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
             return null;
         }
         return i.getData();
+    }
+
+    public void disableSensorWhileBuffering() {
+        mVRLibrary.disableSensor(this);
+    }
+
+    public void enableSensorAfterBuffering() {
+        mVRLibrary.enableSensor(this);
     }
 
     public void toggleButtons() {

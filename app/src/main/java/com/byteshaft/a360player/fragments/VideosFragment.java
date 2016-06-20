@@ -47,8 +47,14 @@ public class VideosFragment extends Fragment {
         mRecyclerView.canScrollVertically(1);
         mRecyclerView.setHasFixedSize(true);
         idsList.add(0);
+        idsList.add(1);
+        idsList.add(2);
         singleItemData.put(0, new String[] {"Interview Prep", "5:52",String.valueOf(
                 Helpers.isUserLoggedIn("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
+        singleItemData.put(1, new String[] {"Video 2", "5:52",String.valueOf(
+                Helpers.isUserLoggedIn("Video 2")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
+        singleItemData.put(2, new String[] {"Video 3", "5:52",String.valueOf(
+                Helpers.isUserLoggedIn("Video 3")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
         return mBaseView;
     }
 
