@@ -64,6 +64,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
         boolean valid = true;
         mFirstNameString = mFirstName.getText().toString();
+        mLastNameString  = mLastName.getText().toString();
+        mSchoolString = mSchool.getText().toString();
         mPasswordEntry = mPassword.getText().toString();
         mEmail = mEmailAddress.getText().toString();
 
@@ -72,6 +74,20 @@ public class RegistrationActivity extends AppCompatActivity {
             valid = false;
         } else {
             mFirstName.setError(null);
+        }
+
+        if (mLastNameString.trim().isEmpty() || mLastNameString.length() < 3) {
+            mLastName.setError("enter at least 3 characters");
+            valid = false;
+        } else {
+            mLastName.setError(null);
+        }
+
+        if (mSchoolString.trim().isEmpty() || mSchoolString.length() < 3) {
+            mSchool.setError("enter at least 3 characters");
+            valid = false;
+        } else {
+            mSchool.setError(null);
         }
 
         if (mPasswordEntry.trim().isEmpty() || mPasswordEntry.length() < 4) {
@@ -105,17 +121,23 @@ public class RegistrationActivity extends AppCompatActivity {
             JSONObject jsonObject;
             if (Helpers.isNetworkAvailable() && Helpers.isInternetWorking()) {
                 try {
-                    jsonObject = Helpers.registerUser(mFirstNameString, mLastNameString, mSchoolString, mEmail,mPasswordEntry);
+                    jsonObject = Helpers.registerUser(mFirstNameString, mLastNameString,
+                            mSchoolString, mEmail,mPasswordEntry);
                     if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
                         System.out.println(jsonObject + "working");
-                        String fullName = jsonObject.getString(AppGlobals.KEY_FULLNAME);
+                        String firstName = jsonObject.getString(AppGlobals.KEY_FIRST_NAME);
+                        String lastName = jsonObject.getString(AppGlobals.KEY_LAST_NAME);
+                        String school = jsonObject.getString(AppGlobals.KEY_SCHOOL);
                         String email = jsonObject.getString(AppGlobals.KEY_EMAIL);
 
-
                         //saving values
-                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FULLNAME, fullName);
-                        Log.i("Full name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FULLNAME));
+                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
+                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, lastName);
+                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
+                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
+                        Log.i("Full name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
+
                         Helpers.saveUserLogin(true);
 
                     }

@@ -200,4 +200,49 @@ public class Helpers {
         System.out.println(jsonObj);
         return (String)jsonObj.get("token");
     }
+
+    public static String getForgotPassword(String email) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("email", email);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+        return object.toString();
+    }
+
+    public static Integer forgotPassword(String email) throws IOException, JSONException {
+        String data = getForgotPassword(email);
+        System.out.println(data);
+        String url = "http://128.199.195.245:8000/api/forgot_password";
+        HttpURLConnection connection = openConnectionForUrl(url, "POST");
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return connection.getResponseCode();
+    }
+
+    public static Integer changePassword(String email, String resetkey, String newpassword) throws IOException, JSONException {
+        String data = changePasswordData(email, resetkey, newpassword);
+        System.out.println(data);
+        String url = "http://128.199.195.245:8000/api/change_password";
+        HttpURLConnection connection = openConnectionForUrl(url, "POST");
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return connection.getResponseCode();
+    }
+
+    public static String changePasswordData(String email, String resetkey, String newpassword) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("email", email);
+            object.put("reset_key", resetkey);
+            object.put("new_password", newpassword);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+
+        return object.toString();
+    }
 }
