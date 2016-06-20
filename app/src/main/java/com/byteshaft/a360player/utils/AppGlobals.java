@@ -18,8 +18,10 @@ public class AppGlobals extends Application {
     public static final String LOGIN_URL = String.format("%s/api/login/", BASE_URL);
 
     public static final String user_login_key = "user_login";
-    public static final String KEY_FULLNAME = "full_name";
+    public static final String KEY_FIRST_NAME = "first_name";
+    public static final String KEY_LAST_NAME = "last_name";
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_SCHOOL = "school";
 
     public static final String KEY_USER_TOKEN = "token";
     public static final String KEY_USER_LOGIN = "user_login";
