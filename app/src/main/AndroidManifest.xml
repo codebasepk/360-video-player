@@ -3,6 +3,7 @@
     package="com.byteshaft.a360player">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".utils.AppGlobals"
@@ -11,12 +12,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity" android:configChanges="screenSize|orientation"
             android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".RegistrationActivity"/>
+        <activity android:name=".LoginActivity">
         </activity>
 
         <activity android:label="MDMultiDemoActivity" android:name=".player.VideoPlayerActivity"
