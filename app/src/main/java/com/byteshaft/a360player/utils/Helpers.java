@@ -62,7 +62,8 @@ public class Helpers {
     public static void alertDialog(Activity activity, String title, String msg) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setTitle(title);
-        alertDialogBuilder.setMessage(msg).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setMessage(msg).setCancelable(false).setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
@@ -113,7 +114,8 @@ public class Helpers {
     /**
      * web service helpers start from here  */
 
-    public static HttpURLConnection openConnectionForUrl(String targetUrl, String method) throws IOException {
+    public static HttpURLConnection openConnectionForUrl(String targetUrl, String method)
+            throws IOException {
         URL url = new URL(targetUrl);
         System.out.println(targetUrl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -123,7 +125,8 @@ public class Helpers {
         return connection;
     }
 
-    public static String getRegistrationData(String firstName, String lastName, String school, String email, String password) {
+    public static String getRegistrationData(String firstName, String lastName, String school,
+                                             String email, String password) {
         JSONObject object = new JSONObject();
 
         try {
@@ -139,7 +142,8 @@ public class Helpers {
         return object.toString();
     }
 
-    private static JSONObject readResponse(HttpURLConnection connection) throws IOException, JSONException {
+    private static JSONObject readResponse(HttpURLConnection connection
+    ) throws IOException, JSONException {
         InputStream is = connection.getInputStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
         StringBuilder response = new StringBuilder();
@@ -152,14 +156,18 @@ public class Helpers {
         return new JSONObject(response.toString());
     }
 
-    private static void sendRequestData(HttpURLConnection connection, String body) throws IOException {
+    private static void sendRequestData(HttpURLConnection connection, String body)
+            throws IOException {
         byte[] outputInBytes = body.getBytes("UTF-8");
         OutputStream os = connection.getOutputStream();
         os.write(outputInBytes);
         os.close();
     }
 
-    public static JSONObject registerUser(String firstName, String lastName, String school, String email, String password) throws IOException, JSONException {
+    public static JSONObject registerUser(
+            String firstName, String lastName, String school,
+                                          String email, String password)
+            throws IOException, JSONException {
         String data = getRegistrationData(firstName,lastName, school ,email, password);
         System.out.println(data);
         String url = AppGlobals.REGISTER_URL;
@@ -189,7 +197,8 @@ public class Helpers {
         return object.toString();
     }
 
-    public static String userLogin(String email, String password) throws IOException, JSONException {
+    public static String userLogin(String email, String password)
+            throws IOException, JSONException {
         String data = getLoginData(email, password);
         System.out.println(data);
         String url = AppGlobals.LOGIN_URL;

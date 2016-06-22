@@ -125,6 +125,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             mSchoolString, mEmail,mPasswordEntry);
                     if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
                         System.out.println(jsonObject + "working");
+
                         String firstName = jsonObject.getString(AppGlobals.KEY_FIRST_NAME);
                         String lastName = jsonObject.getString(AppGlobals.KEY_LAST_NAME);
                         String school = jsonObject.getString(AppGlobals.KEY_SCHOOL);
