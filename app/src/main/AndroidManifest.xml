@@ -15,14 +15,19 @@
 
         <activity android:name=".MainActivity" android:configChanges="screenSize|orientation"
             android:screenOrientation="portrait" android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".RegistrationActivity">
+        </activity>
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".RegistrationActivity"/>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".CodeConfirmationActivity">
+        </activity>
+        <activity android:name=".ForgotPasswordActivity">
         </activity>
 
         <activity android:label="MDMultiDemoActivity" android:name=".player.VideoPlayerActivity"

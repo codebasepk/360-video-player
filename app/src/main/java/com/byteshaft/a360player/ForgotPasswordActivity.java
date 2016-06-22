@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout mNewPasswordLayout;
-
     private Button mRecoverButton;
     private Button mSubmitButton;
 
@@ -209,6 +208,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                 Toast.makeText(AppGlobals.getContext(), "Password successfully changed",
                         Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
             } else {
                 Toast.makeText(AppGlobals.getContext(), "Password changed Failed",
                         Toast.LENGTH_SHORT).show();
