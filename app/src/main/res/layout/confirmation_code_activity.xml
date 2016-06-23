@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/layout_code_confirmation"
+    android:background="@android:color/black"
     android:layout_height="match_parent">
 
 
@@ -18,6 +19,7 @@
 
             <TextView
                 android:id="@+id/tv_confirmation_code"
+                android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -29,6 +31,7 @@
 
             <EditText
                 android:id="@+id/et_confirmation_code_email"
+                android:background="@android:drawable/editbox_background_normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textCursorDrawable="@null"
@@ -43,11 +46,12 @@
 
             <EditText
                 android:id="@+id/et_confirmation_code"
+                android:background="@android:drawable/editbox_background_normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textCursorDrawable="@null"
                 android:textSize="18dp"
-                android:hint="Confirmation Code"
+                android:hint="Activation Key"
                 android:maxLength="5"
                 android:inputType="number"
                 android:padding="10dp"
@@ -56,6 +60,7 @@
 
             <Button
                 android:id="@+id/btn_confirmation_code_submit"
+                android:background="@android:drawable/editbox_background_normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

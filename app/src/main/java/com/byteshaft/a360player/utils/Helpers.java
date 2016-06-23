@@ -38,9 +38,21 @@ public class Helpers {
     }
 
     // get user login status and manipulate app functions by its returned boolean value
-    public static Integer isUserLoggedIn(String key) {
+    public static Integer videoCounter(String key) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         return sharedPreferences.getInt(key, 0);
+    }
+
+    // save boolean value for login status of user , takes boolean value as parameter
+    public static void saveStatus(String videoName, boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(videoName, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserLogin(String key) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(key, false);
     }
 
 
@@ -184,7 +196,7 @@ public class Helpers {
 
         try {
             object.put("email", email);
-            object.put("key", activationKey);
+            object.put("activation_key", activationKey);
         } catch (JSONException var4) {
             var4.printStackTrace();
         }
@@ -213,7 +225,7 @@ public class Helpers {
         JSONObject object = new JSONObject();
 
         try {
-            object.put("username", email);
+            object.put("email", email);
             object.put("password", password);
         } catch (JSONException var4) {
             var4.printStackTrace();
@@ -256,6 +268,27 @@ public class Helpers {
             var8.printStackTrace();
         }
         return object.toString();
+    }
+
+    public static String getAccountStatus(String email) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("email", email);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+        return object.toString();
+    }
+
+    public static Integer accountStatus(String email) throws IOException, JSONException {
+        String data = getAccountStatus(email);
+        System.out.println(data);
+        String url = AppGlobals.ACCOUNT_STAUS_URL;
+        HttpURLConnection connection = openConnectionForUrl(url, "POST");
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return connection.getResponseCode();
     }
 
     public static Integer forgotPassword(String email) throws IOException, JSONException {

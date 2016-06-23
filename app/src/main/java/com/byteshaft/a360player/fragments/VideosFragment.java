@@ -48,7 +48,7 @@ public class VideosFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         idsList.add(0);
         singleItemData.put(0, new String[] {"Interview Prep", "5:52",String.valueOf(
-                Helpers.isUserLoggedIn("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
+                Helpers.videoCounter("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
         return mBaseView;
     }
 
@@ -63,7 +63,7 @@ public class VideosFragment extends Fragment {
             @Override
             public void onItem(Integer item) {
                 String url = singleItemData.get(item)[3];
-                int value = Helpers.isUserLoggedIn(singleItemData.get(item)[0]);
+                int value = Helpers.videoCounter(singleItemData.get(item)[0]);
                 Helpers.videoPlayer(singleItemData.get(item)[0], (value+1));
                 if (!TextUtils.isEmpty(url)){
                     MD360PlayerActivity.startVideo(getActivity(), Uri.parse(url));

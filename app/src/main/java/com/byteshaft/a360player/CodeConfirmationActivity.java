@@ -72,7 +72,6 @@ public class CodeConfirmationActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mSubmitButton.setEnabled(false);
             Helpers.showProgressDialog(CodeConfirmationActivity.this, "Activating User");
 
         }

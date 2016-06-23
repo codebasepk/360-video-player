@@ -20,6 +20,7 @@ public class AppGlobals extends Application {
     public static final String USER_DETAILS = String.format("%s/api/users/me", BASE_URL);
     public static final String FORGOT_PASSWORD_URL = String.format("%s/api/password/forgot", BASE_URL);
     public static final String CHANGE_PASSWORD_URL = String.format("%s/api/password/change", BASE_URL);
+    public static final String ACCOUNT_STAUS_URL = String.format("%s/api/users/status", BASE_URL);
 
     public static final String user_login_key = "user_login";
     public static final String KEY_FIRST_NAME = "first_name";

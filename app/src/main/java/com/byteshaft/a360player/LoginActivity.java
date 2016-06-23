@@ -96,14 +96,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return valid;
     }
 
-    private class LoginTask extends AsyncTask <String, String, String> {
+    private class LoginTask extends AsyncTask<String, String, String> {
 
         private boolean noInternet = false;
+        private int accountStatus;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Helpers.showProgressDialog(LoginActivity.this , "LoggingIn");
+            Helpers.showProgressDialog(LoginActivity.this, "LoggingIn");
         }
 
         @Override
@@ -112,6 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String data = null;
             if (Helpers.isNetworkAvailable() && Helpers.isInternetWorking()) {
                 try {
+                    accountStatus = Helpers.accountStatus(mEmail);
+                    System.out.println(accountStatus + "status");
                     data = Helpers.userLogin(mEmail, mPasswordEntry);
                     System.out.println(data + "working");
                 } catch (IOException | JSONException e) {
@@ -130,7 +133,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (noInternet) {
                 Helpers.alertDialog(LoginActivity.this, "Connection error",
                         "Check your internet connection");
-            } else if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            }
+            if (accountStatus == HttpURLConnection.HTTP_OK) {
                 Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, s);
                 Log.i("Token", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
                 Helpers.saveUserLogin(true);
@@ -139,8 +143,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Helpers.saveUserLogin(true);
                 finish();
             } else {
-                Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
-                        Toast.LENGTH_SHORT).show();
+                if (accountStatus == HttpURLConnection.HTTP_FORBIDDEN) {
+                    System.out.println(accountStatus + "working");
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Account not activated",
+                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
+                } else if (accountStatus == HttpURLConnection.HTTP_NOT_FOUND) {
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Account not found",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
         }
