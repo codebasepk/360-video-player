@@ -38,9 +38,21 @@ public class Helpers {
     }
 
     // get user login status and manipulate app functions by its returned boolean value
-    public static Integer isUserLoggedIn(String key) {
+    public static Integer videoCounter(String key) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         return sharedPreferences.getInt(key, 0);
+    }
+
+    // save boolean value for login status of user , takes boolean value as parameter
+    public static void saveStatus(String videoName, boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(videoName, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserLogin(String key) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(key, false);
     }
 
 
@@ -178,6 +190,31 @@ public class Helpers {
         return readResponse(connection);
     }
 
+    public static String getUserConfirmationData(String email, String activationKey) {
+        JSONObject object = new JSONObject();
+        System.out.println(object);
+
+        try {
+            object.put("email", email);
+            object.put("activation_key", activationKey);
+        } catch (JSONException var4) {
+            var4.printStackTrace();
+        }
+
+        return object.toString();
+    }
+
+    public static int ActivationCodeConfirmation(String email, String activationKey) throws IOException, JSONException {
+        String data = getUserConfirmationData(email, activationKey);
+        System.out.println(data);
+        String url = AppGlobals.USER_ACTIVATION_URL;
+        HttpURLConnection connection = openConnectionForUrl(url, "POST");
+        sendRequestData(connection, data);
+        System.out.println(data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return connection.getResponseCode();
+    }
+
     /**
      *
      * Login starts here
@@ -188,7 +225,7 @@ public class Helpers {
         JSONObject object = new JSONObject();
 
         try {
-            object.put("username", email);
+            object.put("email", email);
             object.put("password", password);
         } catch (JSONException var4) {
             var4.printStackTrace();
@@ -210,6 +247,18 @@ public class Helpers {
         return (String)jsonObj.get("token");
     }
 
+    public static JSONObject userData() throws IOException, JSONException {
+        String urlME = AppGlobals.USER_DETAILS;
+        URL url = new URL(urlME);
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("charset", "utf-8");
+        connection.setRequestProperty("Authorization", "Token " + Helpers.getStringFromSharedPreferences("token"));
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return readResponse(connection);
+    }
+
     public static String getForgotPassword(String email) {
         JSONObject object = new JSONObject();
 
@@ -221,10 +270,31 @@ public class Helpers {
         return object.toString();
     }
 
+    public static String getAccountStatus(String email) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("email", email);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+        return object.toString();
+    }
+
+    public static Integer accountStatus(String email) throws IOException, JSONException {
+        String data = getAccountStatus(email);
+        System.out.println(data);
+        String url = AppGlobals.ACCOUNT_STAUS_URL;
+        HttpURLConnection connection = openConnectionForUrl(url, "POST");
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        return connection.getResponseCode();
+    }
+
     public static Integer forgotPassword(String email) throws IOException, JSONException {
         String data = getForgotPassword(email);
         System.out.println(data);
-        String url = "http://128.199.195.245:8000/api/forgot_password";
+        String url = AppGlobals.FORGOT_PASSWORD_URL;
         HttpURLConnection connection = openConnectionForUrl(url, "POST");
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());
@@ -234,7 +304,7 @@ public class Helpers {
     public static Integer changePassword(String email, String resetkey, String newpassword) throws IOException, JSONException {
         String data = changePasswordData(email, resetkey, newpassword);
         System.out.println(data);
-        String url = "http://128.199.195.245:8000/api/change_password";
+        String url = AppGlobals.CHANGE_PASSWORD_URL;
         HttpURLConnection connection = openConnectionForUrl(url, "POST");
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());

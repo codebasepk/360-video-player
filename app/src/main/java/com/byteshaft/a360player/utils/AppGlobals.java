@@ -13,9 +13,14 @@ public class AppGlobals extends Application {
     public static boolean sPausedByHand = false;
 
 
-    public static final String BASE_URL = "http://46.101.75.194:8000";
-    public static final String REGISTER_URL = String.format("%s/api/register", BASE_URL);
-    public static final String LOGIN_URL = String.format("%s/api/login/", BASE_URL);
+    public static final String BASE_URL = "http://178.62.121.209:8000";
+    public static final String REGISTER_URL = String.format("%s/api/users/register", BASE_URL);
+    public static final String LOGIN_URL = String.format("%s/api/users/login", BASE_URL);
+    public static final String USER_ACTIVATION_URL = String.format("%s/api/users/activate", BASE_URL);
+    public static final String USER_DETAILS = String.format("%s/api/users/me", BASE_URL);
+    public static final String FORGOT_PASSWORD_URL = String.format("%s/api/password/forgot", BASE_URL);
+    public static final String CHANGE_PASSWORD_URL = String.format("%s/api/password/change", BASE_URL);
+    public static final String ACCOUNT_STAUS_URL = String.format("%s/api/users/status", BASE_URL);
 
     public static final String user_login_key = "user_login";
     public static final String KEY_FIRST_NAME = "first_name";

@@ -32,7 +32,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private String mFirstNameString;
     private String mLastNameString;
     private String mSchoolString;
-    private String mEmail;
+    public static String mEmail;
     private String mPasswordEntry;
 
     @Override
@@ -137,7 +137,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
-                        Log.i("Full name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
+                        Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
 
                         Helpers.saveUserLogin(true);
 
@@ -164,7 +164,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         "Account Created Successfully",
                         Toast.LENGTH_LONG).show();
                 finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
                 finish();
             } else if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                 Toast.makeText(AppGlobals.getContext(), "Registration failed. Email already in use",

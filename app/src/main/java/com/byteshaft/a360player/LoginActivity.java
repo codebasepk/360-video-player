@@ -15,6 +15,7 @@ import com.byteshaft.a360player.utils.AppGlobals;
 import com.byteshaft.a360player.utils.Helpers;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.tv_login_forgot_password:
                 System.out.println("forgot password");
+                startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
                 break;
         }
     }
@@ -94,14 +96,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return valid;
     }
 
-    private class LoginTask extends AsyncTask <String, String, String> {
+    private class LoginTask extends AsyncTask<String, String, String> {
 
         private boolean noInternet = false;
+        private int accountStatus;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Helpers.showProgressDialog(LoginActivity.this , "Pleas wait");
+            Helpers.showProgressDialog(LoginActivity.this, "LoggingIn");
         }
 
         @Override
@@ -110,6 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String data = null;
             if (Helpers.isNetworkAvailable() && Helpers.isInternetWorking()) {
                 try {
+                    accountStatus = Helpers.accountStatus(mEmail);
+                    System.out.println(accountStatus + "status");
                     data = Helpers.userLogin(mEmail, mPasswordEntry);
                     System.out.println(data + "working");
                 } catch (IOException | JSONException e) {
@@ -128,15 +133,72 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (noInternet) {
                 Helpers.alertDialog(LoginActivity.this, "Connection error",
                         "Check your internet connection");
-            } else if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            }
+            if (accountStatus == HttpURLConnection.HTTP_OK) {
                 Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, s);
                 Log.i("Token", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
                 Helpers.saveUserLogin(true);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                new GetUserDataTask().execute();
+                Helpers.saveUserLogin(true);
+                finish();
             } else {
-                Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
-                        Toast.LENGTH_SHORT).show();
+                if (accountStatus == HttpURLConnection.HTTP_FORBIDDEN) {
+                    System.out.println(accountStatus + "working");
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Account not activated",
+                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
+                } else if (accountStatus == HttpURLConnection.HTTP_NOT_FOUND) {
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Account not found",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
+
+        }
+    }
+
+    class GetUserDataTask extends AsyncTask<Void, String, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            JSONObject jsonObject;
+
+            try {
+                jsonObject = Helpers.userData();
+                if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    System.out.println(jsonObject + "userData");
+
+                    String firstName = jsonObject.getString(AppGlobals.KEY_FIRST_NAME);
+                    String lastName = jsonObject.getString(AppGlobals.KEY_LAST_NAME);
+                    String school = jsonObject.getString(AppGlobals.KEY_SCHOOL);
+                    String email = jsonObject.getString(AppGlobals.KEY_EMAIL);
+
+                    //saving values
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, lastName);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
+                    Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
+                    Helpers.saveUserLogin(true);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
 
         }
     }

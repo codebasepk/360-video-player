@@ -21,8 +21,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RegistrationActivity"/>
+        <activity android:name=".RegistrationActivity">
+        </activity>
         <activity android:name=".LoginActivity">
+
+        </activity>
+        <activity android:name=".CodeConfirmationActivity">
+        </activity>
+        <activity android:name=".ForgotPasswordActivity">
         </activity>
 
         <activity android:label="MDMultiDemoActivity" android:name=".player.VideoPlayerActivity"
