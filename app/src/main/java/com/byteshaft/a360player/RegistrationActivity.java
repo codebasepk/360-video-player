@@ -130,6 +130,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         String lastName = jsonObject.getString(AppGlobals.KEY_LAST_NAME);
                         String school = jsonObject.getString(AppGlobals.KEY_SCHOOL);
                         String email = jsonObject.getString(AppGlobals.KEY_EMAIL);
+                        String userId = jsonObject.getString(AppGlobals.KEY_ID);
 
                         //saving values
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
@@ -137,6 +138,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
+                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_ID, userId);
                         Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
 
                         Helpers.saveUserLogin(true);

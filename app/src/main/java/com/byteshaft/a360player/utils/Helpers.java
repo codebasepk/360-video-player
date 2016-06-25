@@ -129,7 +129,6 @@ public class Helpers {
     public static HttpURLConnection openConnectionForUrl(String targetUrl, String method)
             throws IOException {
         URL url = new URL(targetUrl);
-        System.out.println(targetUrl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("charset", "utf-8");
@@ -259,6 +258,36 @@ public class Helpers {
         return readResponse(connection);
     }
 
+    public static String updateUserProfile(String firstName, String lastName, String school, String password) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("first_name", firstName);
+            object.put("last_name", lastName);
+            object.put("school", school);
+            object.put("password", password);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+
+        return object.toString();
+    }
+
+    public static JSONObject updateUser(
+            String firstName, String lastName, String school, String password)
+            throws IOException, JSONException {
+        String data = updateUserProfile(firstName,lastName, school, password);
+        System.out.println(data);
+        String url = AppGlobals.PROFILE_UPDATE_URL;
+        HttpURLConnection connection = openConnectionForUrl(url, "PUT");
+        connection.setRequestProperty("Authorization", "Token " +
+                Helpers.getStringFromSharedPreferences("token"));
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        System.out.println(connection.getResponseCode());
+        return readResponse(connection);
+    }
+
     public static String getForgotPassword(String email) {
         JSONObject object = new JSONObject();
 
@@ -284,7 +313,7 @@ public class Helpers {
     public static Integer accountStatus(String email) throws IOException, JSONException {
         String data = getAccountStatus(email);
         System.out.println(data);
-        String url = AppGlobals.ACCOUNT_STAUS_URL;
+        String url = AppGlobals.ACCOUNT_STATUS_URL;
         HttpURLConnection connection = openConnectionForUrl(url, "POST");
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());

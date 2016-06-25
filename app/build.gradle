@@ -31,4 +31,6 @@ dependencies {
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.4.5'
     compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.4.5'
     compile project(path: ':vrlib')
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
 }
