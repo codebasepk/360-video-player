@@ -2,7 +2,9 @@ package com.byteshaft.a360player.player;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.View;
 
 import com.byteshaft.a360player.utils.AppGlobals;
 
@@ -29,6 +31,7 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     public void init(){
         mStatus = STATUS_IDLE;
         mPlayer = new IjkMediaPlayer();
+        mPlayer.setScreenOnWhilePlaying(true);
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
             @Override
@@ -40,12 +43,27 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
                 }
             }
         });
+
         mPlayer.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(IMediaPlayer mp, int what, int extra) {
                 Log.i("IMediaPlayer", "" + what);
                 Log.i("IMediaPlayer","" + extra);
-                return true;
+                switch (what) {
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                        if (MD360PlayerActivity.sProgressBar != null) {
+                            MD360PlayerActivity.getInstance().disableSensorWhileBuffering();
+                            MD360PlayerActivity.sProgressBar.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                        if (MD360PlayerActivity.sProgressBar != null) {
+                            MD360PlayerActivity.getInstance().enableSensorAfterBuffering();
+                            MD360PlayerActivity.sProgressBar.setVisibility(View.GONE);
+                        }
+                        break;
+                }
+                return false;
             }
         });
 

@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.asha.vrlib.MDVRLibrary;
@@ -38,6 +39,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
     private static MD360PlayerActivity sInstance;
     private ImageView glassView;
     public static TextView sBufferUpdate;
+    public static ProgressBar sProgressBar;
 
 
     public static MD360PlayerActivity getInstance() {
@@ -75,17 +77,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         mVRLibrary = createVRLibrary();
         glassView = (ImageView) findViewById(R.id.glass_view);
         sBufferUpdate = (TextView) findViewById(R.id.buffer_percentage);
-
-        // interactive mode switcher
-//        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
-//        interactiveModeSwitcher.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mVRLibrary.switchInteractiveMode(MD360PlayerActivity.this);
-//                updateInteractiveModeText(interactiveModeSwitcher);
-//            }
-//        });
-//        updateInteractiveModeText(interactiveModeSwitcher);
+        sProgressBar = (ProgressBar) findViewById(R.id.progress);
 
         // display mode switcher
         sInstance = this;
@@ -111,20 +103,29 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         });
 
         imageButton = (ImageButton) findViewById(R.id.play_pause);
-//        linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-//        linearLayout.setVisibility(View.VISIBLE);
         frameLayout.setVisibility(View.VISIBLE);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                linearLayout.setVisibility(View.GONE);
                 frameLayout.setVisibility(View.GONE);
             }
         }, 2000);
+    }
 
-
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
     public void cancelBusy() {
@@ -196,6 +197,14 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         return i.getData();
     }
 
+    public void disableSensorWhileBuffering() {
+        mVRLibrary.disableSensor(this);
+    }
+
+    public void enableSensorAfterBuffering() {
+        mVRLibrary.enableSensor(this);
+    }
+
     public void toggleButtons() {
         if (frameLayout.getVisibility() == View.VISIBLE) {
             frameLayout.setVisibility(View.GONE);
@@ -207,7 +216,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
                 public void run() {
                     frameLayout.setVisibility(View.GONE);
                 }
-            }, 2000);
+            }, 4000);
         }
     }
 

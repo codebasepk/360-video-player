@@ -170,16 +170,23 @@ public class MDVRLibrary {
 
     public void onResume(Context context) {
         mInteractiveModeManager.onResume(context);
-
-        for (GLSurfaceView glSurfaceView:mGLSurfaceViewList){
+        for (GLSurfaceView glSurfaceView: mGLSurfaceViewList){
             glSurfaceView.onResume();
         }
+    }
+
+    public void disableSensor(Context context) {
+        mInteractiveModeManager.onPause(context);
+    }
+
+    public void enableSensor(Context context) {
+        mInteractiveModeManager.onResume(context);
     }
 
     public void onPause(Context context){
         mInteractiveModeManager.onPause(context);
 
-        for (GLSurfaceView glSurfaceView:mGLSurfaceViewList){
+        for (GLSurfaceView glSurfaceView: mGLSurfaceViewList){
             glSurfaceView.onPause();
         }
     }
@@ -242,7 +249,7 @@ public class MDVRLibrary {
         private IGestureListener gestureListener;
         private boolean pinchEnabled; // default false.
         public MD360DirectorFactory directorFactory;
-        public int motionDelay = SensorManager.SENSOR_DELAY_GAME;
+        public int motionDelay = SensorManager.SENSOR_DELAY_FASTEST;
         public SensorEventListener sensorListener;
 
         private Builder(Activity activity) {

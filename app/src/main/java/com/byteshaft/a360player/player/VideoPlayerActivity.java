@@ -1,6 +1,5 @@
 package com.byteshaft.a360player.player;
 
-import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -54,7 +53,6 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
     protected MDVRLibrary createVRLibrary() {
         return MDVRLibrary.with(this)
                 .displayMode(MDVRLibrary.DISPLAY_MODE_NORMAL)
-                .motionDelay(SensorManager.SENSOR_DELAY_GAME)
                 .interactiveMode(MDVRLibrary.INTERACTIVE_MODE_MOTION)
                 .video(new MDVRLibrary.IOnSurfaceReadyCallback() {
                     @Override
@@ -75,7 +73,6 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
                     @Override
                     public void onClick(MotionEvent e) {
                         MD360PlayerActivity.getInstance().toggleButtons();
-//                        Toast.makeText(VideoPlayerActivity.this, "onClick!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build(R.id.surface_view1,R.id.surface_view2);
