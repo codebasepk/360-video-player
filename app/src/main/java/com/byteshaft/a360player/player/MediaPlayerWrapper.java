@@ -3,7 +3,6 @@ package com.byteshaft.a360player.player;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 
@@ -34,7 +33,6 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         mPlayer = new IjkMediaPlayer();
         mPlayer.setScreenOnWhilePlaying(true);
         mPlayer.setOnPreparedListener(this);
-        mPlayer.setWakeMode(AppGlobals.getContext(), PowerManager.ACQUIRE_CAUSES_WAKEUP);
         mPlayer.setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(IMediaPlayer mp, int percent) {
@@ -45,6 +43,7 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
                 }
             }
         });
+
         mPlayer.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(IMediaPlayer mp, int what, int extra) {
