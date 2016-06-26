@@ -38,6 +38,8 @@ public class AppGlobals extends Application {
     public static int postResponse;
     public static int responseCode = 0;
     public static boolean sVideoPaused = false;
+    public static final String USER_ACTIVE = "user_active";
+    public static final String REGISTRATION_DONE = "registration_done";
 
     @Override
     public void onCreate() {

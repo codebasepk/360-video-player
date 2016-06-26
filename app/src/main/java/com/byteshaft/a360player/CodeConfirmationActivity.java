@@ -18,9 +18,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-/**
- * Created by husnain on 6/7/16.
- */
 public class CodeConfirmationActivity extends Activity {
 
     private Button mSubmitButton;
@@ -107,7 +104,11 @@ public class CodeConfirmationActivity extends Activity {
                 Toast.makeText(AppGlobals.getContext(),
                         "Confirmation successful",
                         Toast.LENGTH_LONG).show();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Helpers.userActive(true);
+                finish();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                Toast.makeText(CodeConfirmationActivity.this, "please login with your account details",
+                        Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(AppGlobals.getContext(),
                         "Confirmation failed, check internet and retry", Toast.LENGTH_LONG).show();

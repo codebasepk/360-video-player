@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.byteshaft.a360player.MainActivity;
 import com.byteshaft.a360player.R;
 import com.byteshaft.a360player.utils.AppGlobals;
 import com.byteshaft.a360player.utils.Helpers;
@@ -42,6 +45,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public String mEmailString;
     private String mPasswordString;
     private String mNewPasswordString;
+    private boolean isPasswordChaged = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +58,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mEmailAddress = (EditText) mBaseView.findViewById(R.id.email);
         mPassword = (EditText) mBaseView.findViewById(R.id.password);
         mNewPassword = (EditText) mBaseView.findViewById(R.id.repeat_password);
+        mPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isPasswordChaged = true;
+            }
+        });
+        mNewPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isPasswordChaged = true;
+            }
+        });
         mDoneButton = (Button) mBaseView.findViewById(R.id.done_button);
         mDoneButton.setOnClickListener(this);
         mDoneButton.setVisibility(View.GONE);
@@ -68,20 +103,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 mFirstNameString = mFirstName.getText().toString();
                 mLastNameString = mLastName.getText().toString();
                 mSchoolString = mSchool.getText().toString();
-                System.out.println(mFirstNameString);
-                if (validateSubmitInfo()) {
+                Log.i("TAG", "" + isPasswordChaged);
+                if (isPasswordChaged) {
+                    if (validateSubmitInfo()) {
+                        new UpdateUserProfileTask().execute();
+                    }
+                } else {
                     new UpdateUserProfileTask().execute();
                 }
-        }
 
+        }
     }
 
     public boolean validateSubmitInfo() {
         boolean valid = true;
         mPasswordString = mPassword.getText().toString();
         mNewPasswordString = mNewPassword.getText().toString();
-        System.out.println(mPasswordString + "new password");
-        System.out.println(mNewPasswordString + "repeat new password");
         if (mNewPasswordString.length() < 4) {
             mNewPassword.setError("At least 4 characters");
             valid = false;
@@ -110,6 +147,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        isPasswordChaged = false;
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
@@ -119,7 +162,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.user_profile_button:  
+            case R.id.user_profile_button:
                 mFirstName.setEnabled(true);
                 mFirstName.setSelection(mFirstName.getText().length());
                 mLastName.setEnabled(true);
@@ -145,31 +188,40 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         @Override
         protected Integer doInBackground(Void... params) {
 
-            int jsonObject;
+            int jsonObject = 0;
             try {
                 jsonObject = Helpers.updateUser(
                         mFirstNameString,
                         mLastNameString,
                         mSchoolString,
                         mNewPasswordString);
-                System.out.println(jsonObject);
-                if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (jsonObject == HttpURLConnection.HTTP_OK) {
+                    System.out.println(jsonObject);
                     //saving values
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, mFirstNameString);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, mLastNameString);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, mSchoolString);
-                    Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
+                    Log.i("First name", " " + Helpers.getStringFromSharedPreferences(
+                            AppGlobals.KEY_FIRST_NAME));
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            return AppGlobals.getResponseCode();
+            return jsonObject;
         }
 
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
             Helpers.dismissProgressDialog();
+            if (integer == HttpURLConnection.HTTP_OK) {
+                MainActivity.getInstance().openFirstTab();
+                mFirstName.setEnabled(false);
+                mLastName.setEnabled(false);
+                mSchool.setEnabled(false);
+                mEmailAddress.setEnabled(false);
+                isPasswordChaged = false;
+            }
         }
     }
 }

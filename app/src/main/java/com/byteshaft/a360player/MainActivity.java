@@ -1,5 +1,6 @@
 package com.byteshaft.a360player;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,16 +15,28 @@ import android.view.MenuItem;
 import com.byteshaft.a360player.fragments.ProfileFragment;
 import com.byteshaft.a360player.fragments.RecordingFragment;
 import com.byteshaft.a360player.fragments.VideosFragment;
+import com.byteshaft.a360player.utils.Helpers;
 
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private static MainActivity sInstance;
+
+    public static MainActivity getInstance() {
+        return sInstance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Helpers.isRegistered() && !Helpers.isUserActive()) {
+            startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
+        } else if (!Helpers.isUserLogin()) {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
         setContentView(R.layout.activity_main);
+        sInstance = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             tabLayout.getTabAt(i).setIcon(getIcon(i));
         }
+    }
+
+    public void openFirstTab() {
+        mViewPager.setCurrentItem(0);
     }
 
     private int getIcon(int i) {
@@ -119,5 +136,13 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    public void closeApplication() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        startActivity(startMain);
+        finish();
     }
 }

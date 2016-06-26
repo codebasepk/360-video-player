@@ -29,16 +29,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mPassword;
     private TextView mSignUpText;
     private TextView mForgotPasswordTextView;
-
-
     private String mEmail;
     private String mPasswordEntry;
+    public static LoginActivity sInstance;
+
+    public static LoginActivity getInstance() {
+        return sInstance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        sInstance = this;
         mEmailAddress = (EditText) findViewById(R.id.email_address);
         mPassword = (EditText) findViewById(R.id.password_entry);
         mLoginButton = (Button) findViewById(R.id.login);
@@ -97,6 +100,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return valid;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MainActivity.getInstance().closeApplication();
+    }
+
     private class LoginTask extends AsyncTask<String, String, String> {
 
         private boolean noInternet = false;
@@ -142,10 +151,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (loginState == HttpURLConnection.HTTP_OK && !s.trim().isEmpty()) {
                 Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, s);
                 Log.i("Token", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
-                Helpers.saveUserLogin(true);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 new GetUserDataTask().execute();
-                Helpers.saveUserLogin(true);
+                Helpers.userStatus(true);
                 finish();
             } else if (loginState == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
@@ -208,7 +216,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
                     Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
-                    Helpers.saveUserLogin(true);
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

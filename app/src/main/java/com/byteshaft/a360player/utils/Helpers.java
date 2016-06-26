@@ -31,6 +31,41 @@ public class Helpers {
         return PreferenceManager.getDefaultSharedPreferences(AppGlobals.getContext());
     }
 
+
+    public static void userStatus(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.KEY_USER_LOGIN, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserLogin() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.KEY_USER_LOGIN, false);
+    }
+
+    public static void userActive(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.USER_ACTIVE, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserActive() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.USER_ACTIVE, false);
+    }
+
+    public static void registrationDone(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.REGISTRATION_DONE, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isRegistered() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.REGISTRATION_DONE, false);
+    }
+
+
     // save boolean value for login status of user , takes boolean value as parameter
     public static void videoPlayer(String videoName, Integer value) {
         SharedPreferences sharedPreferences = getPreferenceManager();
@@ -43,19 +78,6 @@ public class Helpers {
         return sharedPreferences.getInt(key, 0);
     }
 
-    // save boolean value for login status of user , takes boolean value as parameter
-    public static void saveStatus(String videoName, boolean value) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        sharedPreferences.edit().putBoolean(videoName, value).apply();
-    }
-
-    // get user login status and manipulate app functions by its returned boolean value
-    public static boolean isUserLogin(String key) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        return sharedPreferences.getBoolean(key, false);
-    }
-
-
     public static void saveDataToSharedPreferences(String key, String value) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         sharedPreferences.edit().putString(key, value).apply();
@@ -64,11 +86,6 @@ public class Helpers {
     public static String getStringFromSharedPreferences(String key) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         return sharedPreferences.getString(key, "");
-    }
-
-    public static void saveUserLogin(boolean value) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        sharedPreferences.edit().putBoolean(AppGlobals.KEY_USER_LOGIN, value).apply();
     }
 
     public static void alertDialog(Activity activity, String title, String msg) {

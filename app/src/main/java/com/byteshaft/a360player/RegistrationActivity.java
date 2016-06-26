@@ -139,9 +139,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_ID, userId);
                         Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
-
-                        Helpers.saveUserLogin(true);
-
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -162,11 +159,11 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
                 Toast.makeText(AppGlobals.getContext(),
-                        "Account Created Successfully",
+                        "Account Created Successfully, Check your email for activation code",
                         Toast.LENGTH_LONG).show();
+                Helpers.registrationDone(true);
                 finish();
                 startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
-                finish();
             } else if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                 Toast.makeText(AppGlobals.getContext(), "Registration failed. Email already in use",
                         Toast.LENGTH_SHORT).show();
