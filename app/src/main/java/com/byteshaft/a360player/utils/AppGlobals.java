@@ -9,7 +9,10 @@ public class AppGlobals extends Application {
     private static Context sContext;
     public static final String INTERVIEW_PREP =
             "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/vrtest.mp4";
-    public static boolean sVideoPaused = false;
+    public static final String ONE_ON_ONE =
+            "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/2.mp4";
+    public static final String POST_INTERVIEW =
+            "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/3.mp4";
     public static boolean sPausedByHand = false;
 
 
@@ -34,6 +37,7 @@ public class AppGlobals extends Application {
     public static final String KEY_USER_LOGIN = "user_login";
     public static int postResponse;
     public static int responseCode = 0;
+    public static boolean sVideoPaused = false;
 
     @Override
     public void onCreate() {
