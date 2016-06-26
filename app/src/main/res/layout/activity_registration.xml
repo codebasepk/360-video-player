@@ -70,40 +70,25 @@
 
 
             <EditText
-                android:id="@+id/current_password"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:drawablePadding="9dp"
                 android:background="@android:drawable/editbox_background_normal"
-                android:hint="Current Password"
-                android:inputType="textPassword"
-                android:padding="15dp"
-                android:singleLine="true"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/new_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:drawablePadding="9dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:hint="New Password"
-                android:visibility="gone"
+                android:hint="Password"
                 android:inputType="textPassword"
                 android:padding="15dp"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
             <Button
-                android:id="@+id/done_button"
-                android:background="@android:drawable/editbox_background_normal"
+                android:id="@+id/register_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="30dp"
-                android:text="Done"
+                android:text="Register"
                 android:padding="15dp"
                 android:textSize="14sp" />
         </LinearLayout>

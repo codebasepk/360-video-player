@@ -33,6 +33,7 @@
             
             <ImageView
                 android:id="@+id/bitmap"
+                android:scaleType="centerCrop"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 

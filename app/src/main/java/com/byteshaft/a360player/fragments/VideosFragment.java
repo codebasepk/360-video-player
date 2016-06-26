@@ -50,11 +50,11 @@ public class VideosFragment extends Fragment {
         idsList.add(1);
         idsList.add(2);
         singleItemData.put(0, new String[] {"Interview Prep", "5:52",String.valueOf(
-                Helpers.isUserLoggedIn("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
-        singleItemData.put(1, new String[] {"Video 2", "5:52",String.valueOf(
-                Helpers.isUserLoggedIn("Video 2")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
-        singleItemData.put(2, new String[] {"Video 3", "5:52",String.valueOf(
-                Helpers.isUserLoggedIn("Video 3")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
+                Helpers.videoCounter("Interview Prep")) , AppGlobals.INTERVIEW_PREP, "interview_prep"});
+        singleItemData.put(1, new String[] {"One-on-one", "14:27",String.valueOf(
+                Helpers.videoCounter("One-on-one")) , AppGlobals.ONE_ON_ONE, "one"});
+        singleItemData.put(2, new String[] {"Post Interview", "6:59",String.valueOf(
+                Helpers.videoCounter("Post Interview")) , AppGlobals.POST_INTERVIEW, "post_interview"});
         return mBaseView;
     }
 
@@ -69,7 +69,7 @@ public class VideosFragment extends Fragment {
             @Override
             public void onItem(Integer item) {
                 String url = singleItemData.get(item)[3];
-                int value = Helpers.isUserLoggedIn(singleItemData.get(item)[0]);
+                int value = Helpers.videoCounter(singleItemData.get(item)[0]);
                 Helpers.videoPlayer(singleItemData.get(item)[0], (value+1));
                 if (!TextUtils.isEmpty(url)){
                     MD360PlayerActivity.startVideo(getActivity(), Uri.parse(url));

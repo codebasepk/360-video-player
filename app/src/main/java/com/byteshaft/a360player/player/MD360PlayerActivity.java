@@ -79,17 +79,6 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         sBufferUpdate = (TextView) findViewById(R.id.buffer_percentage);
         sProgressBar = (ProgressBar) findViewById(R.id.progress);
 
-        // interactive mode switcher
-//        final Button interactiveModeSwitcher = (Button) findViewById(R.id.button_interactive_mode_switcher);
-//        interactiveModeSwitcher.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mVRLibrary.switchInteractiveMode(MD360PlayerActivity.this);
-//                updateInteractiveModeText(interactiveModeSwitcher);
-//            }
-//        });
-//        updateInteractiveModeText(interactiveModeSwitcher);
-
         // display mode switcher
         sInstance = this;
         final ImageButton displayModeSwitcher = (ImageButton) findViewById(R.id.button_display_mode_switcher);
