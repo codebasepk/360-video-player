@@ -31,6 +31,41 @@ public class Helpers {
         return PreferenceManager.getDefaultSharedPreferences(AppGlobals.getContext());
     }
 
+
+    public static void userStatus(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.KEY_USER_LOGIN, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserLogin() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.KEY_USER_LOGIN, false);
+    }
+
+    public static void userActive(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.USER_ACTIVE, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isUserActive() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.USER_ACTIVE, false);
+    }
+
+    public static void registrationDone(boolean value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putBoolean(AppGlobals.REGISTRATION_DONE, value).apply();
+    }
+
+    // get user login status and manipulate app functions by its returned boolean value
+    public static boolean isRegistered() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        return sharedPreferences.getBoolean(AppGlobals.REGISTRATION_DONE, false);
+    }
+
+
     // save boolean value for login status of user , takes boolean value as parameter
     public static void videoPlayer(String videoName, Integer value) {
         SharedPreferences sharedPreferences = getPreferenceManager();
@@ -43,19 +78,6 @@ public class Helpers {
         return sharedPreferences.getInt(key, 0);
     }
 
-    // save boolean value for login status of user , takes boolean value as parameter
-    public static void saveStatus(String videoName, boolean value) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        sharedPreferences.edit().putBoolean(videoName, value).apply();
-    }
-
-    // get user login status and manipulate app functions by its returned boolean value
-    public static boolean isUserLogin(String key) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        return sharedPreferences.getBoolean(key, false);
-    }
-
-
     public static void saveDataToSharedPreferences(String key, String value) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         sharedPreferences.edit().putString(key, value).apply();
@@ -64,11 +86,6 @@ public class Helpers {
     public static String getStringFromSharedPreferences(String key) {
         SharedPreferences sharedPreferences = getPreferenceManager();
         return sharedPreferences.getString(key, "");
-    }
-
-    public static void saveUserLogin(boolean value) {
-        SharedPreferences sharedPreferences = getPreferenceManager();
-        sharedPreferences.edit().putBoolean(AppGlobals.KEY_USER_LOGIN, value).apply();
     }
 
     public static void alertDialog(Activity activity, String title, String msg) {
@@ -129,7 +146,6 @@ public class Helpers {
     public static HttpURLConnection openConnectionForUrl(String targetUrl, String method)
             throws IOException {
         URL url = new URL(targetUrl);
-        System.out.println(targetUrl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("charset", "utf-8");
@@ -154,7 +170,7 @@ public class Helpers {
         return object.toString();
     }
 
-    private static JSONObject readResponse(HttpURLConnection connection
+    public static JSONObject readResponse(HttpURLConnection connection
     ) throws IOException, JSONException {
         InputStream is = connection.getInputStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -243,7 +259,7 @@ public class Helpers {
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());
         JSONObject jsonObj = readResponse(connection);
-        System.out.println(jsonObj);
+        AppGlobals.setResponseCode(connection.getResponseCode());
         return (String)jsonObj.get("token");
     }
 
@@ -256,7 +272,40 @@ public class Helpers {
         connection.setRequestProperty("charset", "utf-8");
         connection.setRequestProperty("Authorization", "Token " + Helpers.getStringFromSharedPreferences("token"));
         AppGlobals.setResponseCode(connection.getResponseCode());
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            return new JSONObject();
+        }
         return readResponse(connection);
+    }
+
+    public static String updateUserProfile(String firstName, String lastName, String school, String password) {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("first_name", firstName);
+            object.put("last_name", lastName);
+            object.put("school", school);
+            object.put("password", password);
+        } catch (JSONException var8) {
+            var8.printStackTrace();
+        }
+
+        return object.toString();
+    }
+
+    public static int updateUser(
+            String firstName, String lastName, String school, String password)
+            throws IOException, JSONException {
+        String data = updateUserProfile(firstName,lastName, school, password);
+        System.out.println(data);
+        String url = AppGlobals.PROFILE_UPDATE_URL;
+        HttpURLConnection connection = openConnectionForUrl(url, "PUT");
+        connection.setRequestProperty("Authorization", "Token " +
+                Helpers.getStringFromSharedPreferences("token"));
+        sendRequestData(connection, data);
+        AppGlobals.setResponseCode(connection.getResponseCode());
+        System.out.println(connection.getResponseCode());
+        return connection.getResponseCode();
     }
 
     public static String getForgotPassword(String email) {
@@ -284,7 +333,7 @@ public class Helpers {
     public static Integer accountStatus(String email) throws IOException, JSONException {
         String data = getAccountStatus(email);
         System.out.println(data);
-        String url = AppGlobals.ACCOUNT_STAUS_URL;
+        String url = AppGlobals.ACCOUNT_STATUS_URL;
         HttpURLConnection connection = openConnectionForUrl(url, "POST");
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());

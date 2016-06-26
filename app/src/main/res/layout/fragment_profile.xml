@@ -70,26 +70,26 @@
 
 
             <EditText
-                android:id="@+id/current_password"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:drawablePadding="9dp"
                 android:background="@android:drawable/editbox_background_normal"
-                android:hint="Current Password"
+                android:hint="Password"
                 android:inputType="textPassword"
                 android:padding="15dp"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/new_password"
+                android:id="@+id/repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:drawablePadding="9dp"
                 android:background="@android:drawable/editbox_background_normal"
-                android:hint="New Password"
+                android:hint="Repeat Password"
                 android:visibility="gone"
                 android:inputType="textPassword"
                 android:padding="15dp"
