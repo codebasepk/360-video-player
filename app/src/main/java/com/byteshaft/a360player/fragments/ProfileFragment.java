@@ -1,5 +1,6 @@
 package com.byteshaft.a360player.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -66,7 +67,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.done_button:
                 mFirstNameString = mFirstName.getText().toString();
                 mLastNameString = mLastName.getText().toString();
-                mEmailString = mEmailAddress.getText().toString();
                 mSchoolString = mSchool.getText().toString();
                 System.out.println(mFirstNameString);
                 if (validateSubmitInfo()) {
@@ -119,8 +119,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.user_profile_button:
-                System.out.println("working");
+            case R.id.user_profile_button:  
                 mFirstName.setEnabled(true);
                 mFirstName.setSelection(mFirstName.getText().length());
                 mLastName.setEnabled(true);
@@ -128,7 +127,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 mSchool.setEnabled(true);
                 mSchool.setSelection(mSchool.getText().length());
                 mEmailAddress.setEnabled(false);
-                mEmailAddress.setSelection(mEmailAddress.getText().length());
                 mNewPassword.setVisibility(View.VISIBLE);
                 mDoneButton.setVisibility(View.VISIBLE);
                 break;
@@ -136,7 +134,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    class UpdateUserProfileTask extends AsyncTask<Void, String, Void> {
+    class UpdateUserProfileTask extends AsyncTask<Void, String, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -145,9 +143,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
 
-            JSONObject jsonObject;
+            int jsonObject;
             try {
                 jsonObject = Helpers.updateUser(
                         mFirstNameString,
@@ -156,16 +154,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         mNewPasswordString);
                 System.out.println(jsonObject);
                 if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //saving values
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, mFirstNameString);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, mLastNameString);
+                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, mSchoolString);
+                    Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+            return AppGlobals.getResponseCode();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
             Helpers.dismissProgressDialog();
         }
     }

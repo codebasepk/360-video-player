@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         private boolean noInternet = false;
         private int accountStatus;
+        private int loginState = 0;
 
         @Override
         protected void onPreExecute() {
@@ -114,8 +116,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (Helpers.isNetworkAvailable() && Helpers.isInternetWorking()) {
                 try {
                     accountStatus = Helpers.accountStatus(mEmail);
-                    System.out.println(accountStatus + "status");
+                    System.out.println(accountStatus + " status");
                     data = Helpers.userLogin(mEmail, mPasswordEntry);
+                    loginState = AppGlobals.getResponseCode();
                     System.out.println(data + "working");
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -129,12 +132,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.e("TAG", ""  + accountStatus);
+
             Helpers.dismissProgressDialog();
             if (noInternet) {
                 Helpers.alertDialog(LoginActivity.this, "Connection error",
                         "Check your internet connection");
             }
-            if (accountStatus == HttpURLConnection.HTTP_OK) {
+            if (loginState == HttpURLConnection.HTTP_OK && !s.trim().isEmpty()) {
                 Helpers.saveDataToSharedPreferences(AppGlobals.KEY_USER_TOKEN, s);
                 Log.i("Token", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_USER_TOKEN));
                 Helpers.saveUserLogin(true);
@@ -142,6 +147,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 new GetUserDataTask().execute();
                 Helpers.saveUserLogin(true);
                 finish();
+            } else if (loginState == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                Toast.makeText(AppGlobals.getContext(), "Login Failed! Invalid Email or Password",
+                        Toast.LENGTH_SHORT).show();
             } else {
                 if (accountStatus == HttpURLConnection.HTTP_FORBIDDEN) {
                     System.out.println(accountStatus + "working");
@@ -162,6 +170,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     class GetUserDataTask extends AsyncTask<Void, String, Void> {
 
+        private boolean unAuthorized = false;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -169,12 +179,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected Void doInBackground(Void... params) {
-            JSONObject jsonObject;
+            JSONObject jsonObject = null;
 
             try {
-                jsonObject = Helpers.userData();
+                String urlME = AppGlobals.USER_DETAILS;
+                URL url = new URL(urlME);
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("charset", "utf-8");
+                connection.setRequestProperty("Authorization", "Token " + Helpers.getStringFromSharedPreferences("token"));
+                AppGlobals.setResponseCode(connection.getResponseCode());
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    unAuthorized = true;
+                } else {
+                    jsonObject = Helpers.readResponse(connection);
+                }
                 if (AppGlobals.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    System.out.println(jsonObject + "userData");
 
                     String firstName = jsonObject.getString(AppGlobals.KEY_FIRST_NAME);
                     String lastName = jsonObject.getString(AppGlobals.KEY_LAST_NAME);
@@ -185,7 +206,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, lastName);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
-                    Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                     Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
                     Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
                     Helpers.saveUserLogin(true);
@@ -199,6 +219,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (unAuthorized) {
+                Helpers.alertDialog(LoginActivity.this, "UnAuthorized",
+                        "Username or password is incorrect");
+            }
 
         }
     }

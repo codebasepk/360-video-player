@@ -153,7 +153,7 @@ public class Helpers {
         return object.toString();
     }
 
-    private static JSONObject readResponse(HttpURLConnection connection
+    public static JSONObject readResponse(HttpURLConnection connection
     ) throws IOException, JSONException {
         InputStream is = connection.getInputStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -242,7 +242,7 @@ public class Helpers {
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());
         JSONObject jsonObj = readResponse(connection);
-        System.out.println(jsonObj);
+        AppGlobals.setResponseCode(connection.getResponseCode());
         return (String)jsonObj.get("token");
     }
 
@@ -255,6 +255,9 @@ public class Helpers {
         connection.setRequestProperty("charset", "utf-8");
         connection.setRequestProperty("Authorization", "Token " + Helpers.getStringFromSharedPreferences("token"));
         AppGlobals.setResponseCode(connection.getResponseCode());
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            return new JSONObject();
+        }
         return readResponse(connection);
     }
 
@@ -273,7 +276,7 @@ public class Helpers {
         return object.toString();
     }
 
-    public static JSONObject updateUser(
+    public static int updateUser(
             String firstName, String lastName, String school, String password)
             throws IOException, JSONException {
         String data = updateUserProfile(firstName,lastName, school, password);
@@ -285,7 +288,7 @@ public class Helpers {
         sendRequestData(connection, data);
         AppGlobals.setResponseCode(connection.getResponseCode());
         System.out.println(connection.getResponseCode());
-        return readResponse(connection);
+        return connection.getResponseCode();
     }
 
     public static String getForgotPassword(String email) {

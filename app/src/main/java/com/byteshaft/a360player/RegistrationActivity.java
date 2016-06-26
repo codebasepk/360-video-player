@@ -136,7 +136,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_LAST_NAME, lastName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_SCHOOL, school);
-                        Helpers.saveDataToSharedPreferences(AppGlobals.KEY_FIRST_NAME, firstName);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_EMAIL, email);
                         Helpers.saveDataToSharedPreferences(AppGlobals.KEY_ID, userId);
                         Log.i("First name", " " + Helpers.getStringFromSharedPreferences(AppGlobals.KEY_FIRST_NAME));
