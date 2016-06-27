@@ -249,7 +249,7 @@ public class MDVRLibrary {
         private IGestureListener gestureListener;
         private boolean pinchEnabled; // default false.
         public MD360DirectorFactory directorFactory;
-        public int motionDelay = SensorManager.SENSOR_DELAY_FASTEST;
+        public int motionDelay = SensorManager.SENSOR_DELAY_GAME;
         public SensorEventListener sensorListener;
 
         private Builder(Activity activity) {

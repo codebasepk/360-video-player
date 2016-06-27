@@ -170,6 +170,7 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     }
 
     public void onResume() {
+        MD360PlayerActivity.getInstance().enableSensorAfterBuffering();
         start();
         AppGlobals.sVideoPaused = false;
     }

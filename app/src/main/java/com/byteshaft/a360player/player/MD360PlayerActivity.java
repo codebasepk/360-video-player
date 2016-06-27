@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -40,6 +41,8 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
     private ImageView glassView;
     public static TextView sBufferUpdate;
     public static ProgressBar sProgressBar;
+    private PowerManager.WakeLock wakeLock;
+    private PowerManager powerManager;
 
 
     public static MD360PlayerActivity getInstance() {
@@ -69,6 +72,10 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
         // full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.screenBrightness = 1.0f;
+        getWindow().setAttributes(params);
 
         // set content view
         setContentView(R.layout.activity_md_multi);
@@ -172,6 +179,9 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        wakeLock.acquire();
         if (!AppGlobals.sPausedByHand) {
             mVRLibrary.onResume(this);
         }
@@ -181,6 +191,7 @@ public abstract class MD360PlayerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mVRLibrary.onPause(this);
+        wakeLock.release();
     }
 
     @Override
