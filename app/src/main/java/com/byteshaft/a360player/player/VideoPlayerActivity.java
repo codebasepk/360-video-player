@@ -73,6 +73,15 @@ public class VideoPlayerActivity extends MD360PlayerActivity {
                     @Override
                     public void onClick(MotionEvent e) {
                         MD360PlayerActivity.getInstance().toggleButtons();
+                        if (!AppGlobals.isBufferring) {
+                            if (mMediaPlayerWrapper.getPlayer().isPlaying()) {
+                                mMediaPlayerWrapper.onPause();
+                                imageButton.setImageResource(android.R.drawable.ic_media_play);
+                            } else {
+                                mMediaPlayerWrapper.onResume();
+                                imageButton.setImageResource(android.R.drawable.ic_media_pause);
+                            }
+                        }
                     }
                 })
                 .build(R.id.surface_view1,R.id.surface_view2);
