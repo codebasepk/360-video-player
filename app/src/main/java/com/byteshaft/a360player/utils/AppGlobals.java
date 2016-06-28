@@ -14,8 +14,8 @@ public class AppGlobals extends Application {
     public static final String POST_INTERVIEW =
             "http://192.169.235.30/~careeredgeaci/careeredgectl.com/v2/3.mp4";
     public static boolean sPausedByHand = false;
-
-
+    public static  boolean isBufferring = false;
+    
     public static final String BASE_URL = "http://178.62.121.209:8000";
     public static final String REGISTER_URL = String.format("%s/api/users/register", BASE_URL);
     public static final String LOGIN_URL = String.format("%s/api/users/login", BASE_URL);

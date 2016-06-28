@@ -51,12 +51,14 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
                 Log.i("IMediaPlayer","" + extra);
                 switch (what) {
                     case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                        AppGlobals.isBufferring = true;
                         if (MD360PlayerActivity.sProgressBar != null) {
                             MD360PlayerActivity.getInstance().disableSensorWhileBuffering();
                             MD360PlayerActivity.sProgressBar.setVisibility(View.VISIBLE);
                         }
                         break;
                     case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                        AppGlobals.isBufferring = false;
                         if (MD360PlayerActivity.sProgressBar != null) {
                             MD360PlayerActivity.getInstance().enableSensorAfterBuffering();
                             MD360PlayerActivity.sProgressBar.setVisibility(View.GONE);
